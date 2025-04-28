@@ -42,9 +42,6 @@ train['experience'] = train['experience'].fillna(0)
 train['tutor_rating'] = train['tutor_rating'].fillna(0)
 train.drop(columns=['Unnamed: 0'], inplace=True)
 
-# sns.set(rc = {'figure.figsize':(40,40)})
-# sns.heatmap(train.corr(), annot = True, cmap="YlGnBu", linecolor='white',linewidths=1)
-# plt.show()
 
 X = train.drop(columns=['mean_price'])
 Y = train['mean_price']
