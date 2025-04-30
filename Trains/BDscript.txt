@@ -1,0 +1,121 @@
+CREATE TABLE IF NOT EXISTS public.miss_stations
+(
+    train integer,
+    station integer,
+    CONSTRAINT stu2 UNIQUE (train, station)
+);
+
+CREATE TABLE IF NOT EXISTS public.route
+(
+    train integer NOT NULL,
+    first_station integer,
+    last_station integer,
+    CONSTRAINT route_pkey PRIMARY KEY (train)
+);
+
+CREATE TABLE IF NOT EXISTS public.schedule
+(
+    train integer,
+    station integer,
+    arrive_time time without time zone,
+    station_number integer,
+    platform_number integer,
+    tariff_zone integer,
+    CONSTRAINT stu UNIQUE (train, station)
+);
+
+CREATE TABLE IF NOT EXISTS public.stations
+(
+    id integer NOT NULL,
+    name text COLLATE pg_catalog."default",
+    CONSTRAINT stations_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.test_stack
+(
+    id serial NOT NULL,
+    string character varying(64) COLLATE pg_catalog."default",
+    CONSTRAINT test_stack_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.ticket
+(
+    id serial NOT NULL,
+    train integer,
+    station_permit_count integer,
+    CONSTRAINT ticket_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.train_price
+(
+    train integer,
+    price numeric
+);
+
+CREATE TABLE IF NOT EXISTS public.working_days
+(
+    train integer,
+    day character varying(20) COLLATE pg_catalog."default"
+);
+
+ALTER TABLE IF EXISTS public.miss_stations
+    ADD CONSTRAINT f7 FOREIGN KEY (train)
+    REFERENCES public.route (train) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS public.miss_stations
+    ADD CONSTRAINT f8 FOREIGN KEY (station)
+    REFERENCES public.stations (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS public.route
+    ADD CONSTRAINT f4 FOREIGN KEY (first_station)
+    REFERENCES public.stations (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS public.route
+    ADD CONSTRAINT f5 FOREIGN KEY (last_station)
+    REFERENCES public.stations (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS public.schedule
+    ADD CONSTRAINT f1 FOREIGN KEY (station)
+    REFERENCES public.stations (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS public.schedule
+    ADD CONSTRAINT f2 FOREIGN KEY (train)
+    REFERENCES public.route (train) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS public.ticket
+    ADD CONSTRAINT f9 FOREIGN KEY (train)
+    REFERENCES public.route (train) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS public.train_price
+    ADD CONSTRAINT f3 FOREIGN KEY (train)
+    REFERENCES public.route (train) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS public.working_days
+    ADD CONSTRAINT working_days_train_fkey FOREIGN KEY (train)
+    REFERENCES public.route (train) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
